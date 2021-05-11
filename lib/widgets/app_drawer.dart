@@ -37,7 +37,7 @@ class AppDrawer extends StatelessWidget {
               Navigator.of(context)
                   .pushReplacementNamed(UserProductScreen.routeName);
             },
-          )
+          ),
         ],
       ),
     );

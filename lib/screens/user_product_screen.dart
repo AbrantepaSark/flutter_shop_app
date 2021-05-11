@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import '../providers/Products.dart';
 
+import './edit_product_screen.dart';
+
 import '../widgets/user_product_item.dart';
 import '../widgets/app_drawer.dart';
 
@@ -14,7 +16,13 @@ class UserProductScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('My products'),
-        actions: [IconButton(icon: Icon(Icons.add), onPressed: () {})],
+        actions: [
+          IconButton(
+              icon: Icon(Icons.add),
+              onPressed: () {
+                Navigator.of(context).pushNamed(EditProductScreen.routeName);
+              })
+        ],
       ),
       drawer: AppDrawer(),
       body: Padding(
@@ -23,7 +31,7 @@ class UserProductScreen extends StatelessWidget {
           itemCount: productData.items.length,
           itemBuilder: (_, i) => Column(
             children: [
-              UserProductItem(
+              UserProductItem(productData.items[i].id,
                   productData.items[i].title, productData.items[i].imageURL),
               Divider(),
             ],
