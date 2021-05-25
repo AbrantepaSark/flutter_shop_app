@@ -42,16 +42,7 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).primaryColor,
                   ),
-                  TextButton(
-                      onPressed: () {
-                        Provider.of<Orders>(context, listen: false).addOrder(
-                            myCart.items.values.toList(), myCart.getTotal);
-
-                        myCart.clear();
-                      },
-                      child: Text(
-                        'Order Now',
-                      ))
+                  OrderButton(myCart: myCart)
                 ],
               ),
             ),
@@ -70,5 +61,44 @@ class CartScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key key,
+    @required this.myCart,
+  }) : super(key: key);
+
+  final Cart myCart;
+
+  @override
+  _OrderButtonState createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+        onPressed: (widget.myCart.getTotal <= 0 || _isLoading)
+            ? null
+            : () async {
+                setState(() {
+                  _isLoading = true;
+                });
+                await Provider.of<Orders>(context, listen: false).addOrder(
+                    widget.myCart.items.values.toList(),
+                    widget.myCart.getTotal);
+                setState(() {
+                  _isLoading = false;
+                });
+                widget.myCart.clear();
+              },
+        child: _isLoading
+            ? CircularProgressIndicator()
+            : Text(
+                'Order Now',
+              ));
   }
 }
