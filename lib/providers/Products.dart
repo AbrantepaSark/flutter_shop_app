@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'dart:convert' as convert;
+import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/http_exception.dart';
 
@@ -33,6 +33,12 @@ class Products with ChangeNotifier {
     //     imageURL: 'assets/images/shoes.png'),
   ];
 
+  final String userToken;
+  Products(this.userToken, this._items);
+  // void update(String token) {
+  //   userToken = token;
+  // }
+
   List<Product> get items {
     return [..._items];
   }
@@ -46,12 +52,13 @@ class Products with ChangeNotifier {
   }
 
   Future<void> getProducts() async {
-    final url = Uri.https(
-        'shop-app-5bc2a-default-rtdb.firebaseio.com', '/products.json');
+    final url = Uri.https('shop-app-5bc2a-default-rtdb.firebaseio.com',
+        '/products.json', {'auth': userToken});
+
     try {
       final response = await http.get(url);
-      final responseData =
-          convert.jsonDecode(response.body) as Map<String, dynamic>;
+      final responseData = json.decode(response.body) as Map<String, dynamic>;
+
       if (responseData == null) {
         return;
       }
@@ -73,12 +80,12 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    final url = Uri.https(
-        'shop-app-5bc2a-default-rtdb.firebaseio.com', '/products.json');
+    final url = Uri.https('shop-app-5bc2a-default-rtdb.firebaseio.com',
+        '/products.json', {'auth': userToken});
     try {
       final response = await http.post(
         url,
-        body: convert.jsonEncode({
+        body: jsonEncode({
           'title': product.title,
           'price': product.price,
           'description': product.description,
@@ -92,7 +99,7 @@ class Products with ChangeNotifier {
         price: product.price,
         description: product.description,
         imageURL: product.imageURL,
-        id: convert.jsonDecode(response.body)['name'],
+        id: jsonDecode(response.body)['name'],
       );
 
       _items.add(newProduct);
@@ -103,11 +110,11 @@ class Products with ChangeNotifier {
   }
 
   Future<void> updateProduct(String id, Product product) async {
-    final url = Uri.https(
-        'shop-app-5bc2a-default-rtdb.firebaseio.com', '/products/$id.json');
+    final url = Uri.https('shop-app-5bc2a-default-rtdb.firebaseio.com',
+        '/products/$id.json', {'auth': userToken});
     try {
       await http.patch(url,
-          body: convert.jsonEncode({
+          body: jsonEncode({
             'title': product.title,
             'price': product.price,
             'description': product.description,
@@ -122,8 +129,8 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = Uri.https(
-        'shop-app-5bc2a-default-rtdb.firebaseio.com', '/products/$id.json');
+    final url = Uri.https('shop-app-5bc2a-default-rtdb.firebaseio.com',
+        '/products/$id.json', {'auth': userToken});
     var response = await http.delete(url);
     if (response.statusCode >= 400) {
       notifyListeners();

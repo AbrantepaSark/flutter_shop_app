@@ -13,7 +13,7 @@ import '../widgets/app_drawer.dart';
 enum SelectOptions { All, Favorites }
 
 class ProductsScreen extends StatefulWidget {
-  static const routeName = '/';
+  static const routeName = '/products';
 
   @override
   _ProductsScreenState createState() => _ProductsScreenState();

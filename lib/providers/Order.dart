@@ -25,10 +25,14 @@ class Orders with ChangeNotifier {
     return [..._orders];
   }
 
+  final String token;
+
+  Orders(this.token, this._orders);
+
   Future<void> getOrders() async {
     try {
-      final url = Uri.https(
-          'shop-app-5bc2a-default-rtdb.firebaseio.com', '/orders.json');
+      final url = Uri.https('shop-app-5bc2a-default-rtdb.firebaseio.com',
+          '/orders.json', {'auth': token});
       final response = await http.get(url);
       final List<OrderItem> loadedOrders = [];
       final extractedData = json.decode(response.body) as Map<String, dynamic>;
@@ -63,8 +67,8 @@ class Orders with ChangeNotifier {
     var timeStamp = DateTime.now();
 
     try {
-      final url = Uri.https(
-          'shop-app-5bc2a-default-rtdb.firebaseio.com', '/orders.json');
+      final url = Uri.https('shop-app-5bc2a-default-rtdb.firebaseio.com',
+          '/orders.json', {'auth': token});
       final response = await http.post(url,
           body: json.encode({
             'amount': total,

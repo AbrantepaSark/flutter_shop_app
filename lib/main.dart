@@ -15,7 +15,6 @@ import './screens/edit_product_screen.dart';
 import './screens/auth_screen.dart';
 
 void main() {
-  // HttpOverrides.global = new MyHttpOverrides();
   runApp(MyApp());
 }
 
@@ -28,14 +27,18 @@ class MyApp extends StatelessWidget {
           ChangeNotifierProvider(
             create: (ctx) => Auth(),
           ),
-          ChangeNotifierProvider(
-            create: (ctx) => Products(),
+          ChangeNotifierProxyProvider<Auth, Products>(
+            create: null,
+            update: (ctx, auth, data) =>
+                Products(auth.token, data == null ? [] : data.items),
           ),
           ChangeNotifierProvider(
             create: (ctx) => Cart(),
           ),
-          ChangeNotifierProvider(
-            create: (ctx) => Orders(),
+          ChangeNotifierProxyProvider<Auth, Orders>(
+            create: null,
+            update: (ctx, auth, data) =>
+                Orders(auth.token, data == null ? [] : data.orders),
           ),
         ],
         child: Consumer<Auth>(
@@ -46,7 +49,7 @@ class MyApp extends StatelessWidget {
                 primarySwatch: Colors.pink,
                 accentColor: Colors.deepOrange,
                 fontFamily: 'SourceSansPro'),
-            initialRoute: auth.isAuth ? '/' : '/auth',
+            home: auth.isAuth ? ProductsScreen() : AuthScreen(),
             routes: {
               AuthScreen.routeName: (ctx) => AuthScreen(),
               ProductsScreen.routeName: (ctx) => ProductsScreen(),
