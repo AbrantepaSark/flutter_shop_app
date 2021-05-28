@@ -50,6 +50,16 @@ class Auth with ChangeNotifier {
     // print(json.decode(response.body));
   }
 
+  // Future<void> tryRoute() async {
+  //   final url = Uri.parse('https://10.0.2.2:8000');
+  //   final response = await http.get(url);
+  //   if (response.statusCode != 200) {
+  //     print('Your try route didnt work');
+  //     return;
+  //   }
+  //   print(response.body);
+  // }
+
   Future<void> signIn(String email, String password) async {
     final url = Uri.parse(
         'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyAsVhvkaMxr85yuawkt8R6TQH4majnK1nM');
