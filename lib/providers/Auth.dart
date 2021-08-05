@@ -100,11 +100,11 @@ class Auth with ChangeNotifier {
 
   Future<bool> autoLogin() async {
     final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('userkey')) {
+    if (!prefs.containsKey('datakey')) {
       return false;
     }
     final extractedData =
-        jsonDecode(prefs.getString('userKey')) as Map<String, dynamic>;
+        jsonDecode(prefs.getString('dataKey')) as Map<String, dynamic>;
     final expiryDate = DateTime.parse(extractedData['expiryDate']);
     if (expiryDate.isBefore(DateTime.now())) {
       return false;

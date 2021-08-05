@@ -176,15 +176,12 @@ class _AuthCardState extends State<AuthCard> {
                 TextFormField(
                   decoration: InputDecoration(labelText: 'E-mail'),
                   keyboardType: TextInputType.emailAddress,
-                  validator: (value) {
-                    if (value.isEmpty || !value.contains('@')) {
-                      return 'Invalid email';
-                    }
-                    return null;
-                  },
-                  onSaved: (value) {
-                    _authData['email'] = value;
-                  },
+                ),
+                SizedBox(height: 10),
+                ElevatedButton.icon(
+                  onPressed: null,
+                  icon: Icon(Icons.delete),
+                  label: Text('Delete'),
                 ),
                 TextFormField(
                   decoration: InputDecoration(labelText: 'Password'),
